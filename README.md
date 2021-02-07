@@ -1,0 +1,2 @@
+# guac
+Guacamole install script
