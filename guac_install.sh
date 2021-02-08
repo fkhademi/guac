@@ -5,6 +5,10 @@
 
 LOG="/tmp/guac-install.log"
 
+# Remove apache2
+apt autoremove -y
+apt-get remove apache2 -y
+
 # Install all the needed packages
 sudo apt-get update
 sudo apt-get install xrdp lxde make gcc g++ libcairo2-dev libjpeg-turbo8-dev libpng-dev libtool-bin libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev freerdp2-dev libpango1.0-dev libssh2-1-dev libvncserver-dev libtelnet-dev libssl-dev libvorbis-dev libwebp-dev tomcat9 tomcat9-admin tomcat9-common tomcat9-user nginx -y
