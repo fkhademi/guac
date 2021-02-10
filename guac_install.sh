@@ -93,8 +93,8 @@ sudo useradd -m -s /bin/bash $1
 echo "$1:$2" | sudo chpasswd
 
 # Download ssl cert for nginx
-sudo wget https://avx-build.s3.eu-central-1.amazonaws.com/avxlab.de-cert.crt -O /etc/nginx/cert.crt #san-cert.crt 
-sudo wget https://avx-build.s3.eu-central-1.amazonaws.com/avxlab.de-cert.key -O /etc/nginx/cert.key #san-cert.key 
+sudo wget https://avx-build.s3.eu-central-1.amazonaws.com/san-cert.crt -O /etc/nginx/cert.crt #san-cert.crt 
+sudo wget https://avx-build.s3.eu-central-1.amazonaws.com/san-cert.key -O /etc/nginx/cert.key #san-cert.key 
 sudo systemctl start nginx 
 sudo systemctl enable nginx 
 
