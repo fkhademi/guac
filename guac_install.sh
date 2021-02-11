@@ -163,7 +163,9 @@ sudo systemctl restart guacd
 sudo cp logo-64.png /usr/share/lxde/images/lxde-icon.png 
 sudo wget https://avx-build.s3.eu-central-1.amazonaws.com/cne-student.pem -P /home/ubuntu/ 
 sudo chmod 400 /home/ubuntu/cne-student.pem 
+sudo cp /home/ubuntu/cne-student.pem /home/$1/
 sudo chown ubuntu:ubuntu /home/ubuntu/cne-student.pem 
+sudo chown $1:$1 /home/$1/cne-student.pem 
 
 # Add pod ID search domain
 sudo sed -i '$d' /etc/netplan/50-cloud-init.yaml 
