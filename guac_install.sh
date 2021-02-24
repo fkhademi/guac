@@ -38,7 +38,7 @@ sudo mkdir /etc/guacamole
 
 echo "<user-mapping>
 <authorize 
-    username=\"$1\"
+    username=\"admin\"
     password=\"$2\">
   <connection name=\"SSH - Client\">
     <protocol>ssh</protocol>
