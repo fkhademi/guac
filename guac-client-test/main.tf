@@ -12,12 +12,12 @@ resource "aws_vpc" "default" {
 
 resource "aws_internet_gateway" "default" {
   vpc_id = aws_vpc.default.id
-  tags   = { Name = "avx-guac-igw" }
+  tags   = { Name = "avx-${var.hostname}-igw" }
 }
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.default.id
-  tags   = { Name = "avx-guac-rt" }
+  tags   = { Name = "avx-${var.hostname}-rt" }
 }
 
 resource "aws_route" "public" {
@@ -29,7 +29,7 @@ resource "aws_route" "public" {
 resource "aws_subnet" "public" {
   vpc_id     = aws_vpc.default.id
   cidr_block = "10.0.0.0/26"
-  tags       = { Name = "avx-guac-subnet" }
+  tags       = { Name = "avx-${var.hostname}-subnet" }
 }
 
 resource "aws_route_table_association" "public" {
@@ -40,7 +40,7 @@ resource "aws_route_table_association" "public" {
 # Create a Guacamole client for each pod
 module "aws_client" {
   source        = "git::https://github.com/fkhademi/terraform-aws-instance-module.git?ref=v1.3"
-  name          = "guac-test"
+  name          = "${var.hostname}-vm"
   region        = var.region
   vpc_id        = aws_vpc.default.id
   subnet_id     = aws_subnet.public.id
@@ -54,9 +54,9 @@ module "aws_client" {
 data "template_file" "cloudconfig" {
   template = file("${path.module}/cloud-init-client.tpl")
   vars = {
-    username   = "testuser"
+    username   = var.username
     password   = var.client_password
-    hostname   = "guactest.${var.domain_name}"
+    hostname   = "${var.hostname}.${var.domain_name}"
     domainname = var.domain_name
   }
 }
@@ -64,7 +64,7 @@ data "template_file" "cloudconfig" {
 # Public DNS record for each Guacamole client
 resource "aws_route53_record" "client" {
   zone_id = data.aws_route53_zone.domain_name.zone_id
-  name    = "guactest.${data.aws_route53_zone.domain_name.name}"
+  name    = "${var.hostname}.${data.aws_route53_zone.domain_name.name}"
   type    = "A"
   ttl     = "1"
   records = [module.aws_client.vm.public_ip]

@@ -44,7 +44,9 @@ echo "<user-mapping>
     <protocol>ssh</protocol>
     <param name=\"hostname\">localhost</param>
     <param name=\"port\">22</param>
-  </connection>    
+    <param name=\"username\">${username}</param>
+    <param name=\"password\">${password}</param>
+    </connection>    
   <connection name=\"RDP - Test\">
     <protocol>rdp</protocol>
     <param name=\"hostname\">localhost</param>
@@ -168,3 +170,6 @@ sudo sed -i '$d' /etc/netplan/50-cloud-init.yaml
 echo "            nameservers:
                 search: [${domainname}]" | sudo tee -a /etc/netplan/50-cloud-init.yaml
 sudo netplan apply 
+
+sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+sudo /etc/init.d/ssh restart
