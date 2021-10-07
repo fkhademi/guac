@@ -80,8 +80,6 @@ sudo useradd -m -s /bin/bash ${username}
 echo "${username}:${password}" | sudo chpasswd
 
 # Download ssl cert for nginx
-sudo wget https://avx-build.s3.eu-central-1.amazonaws.com/san-cert.crt -O /etc/nginx/cert.crt #san-cert.crt 
-sudo wget https://avx-build.s3.eu-central-1.amazonaws.com/san-cert.key -O /etc/nginx/cert.key #san-cert.key 
 sudo systemctl start nginx 
 sudo systemctl enable nginx 
 
@@ -119,27 +117,6 @@ echo "server {
           proxy_http_version 1.1;
           proxy_cookie_path /guacamole/ /;
     }
-}
-server {
-	listen 443 ssl;
-	server_name ${hostname};
-
-  ssl_certificate /etc/nginx/cert.crt;
-	ssl_certificate_key /etc/nginx/cert.key;
-	ssl_protocols TLSv1.2;
-	ssl_prefer_server_ciphers on; 
-	add_header X-Frame-Options DENY;
-	add_header X-Content-Type-Options nosniff;
-
-	access_log  /var/log/nginx/guac_access.log;
-	error_log  /var/log/nginx/guac_error.log;
-
-	location / {
-		    proxy_pass http://localhost:8080/guacamole/;
-		    proxy_buffering off;
-		    proxy_http_version 1.1;
-		    proxy_cookie_path /guacamole/ /;
-	}
 }" | sudo tee -a /etc/nginx/conf.d/default.conf
 
 sudo systemctl restart nginx 
@@ -154,16 +131,11 @@ sudo wget https://avx-build.s3.eu-central-1.amazonaws.com/logo-64.png
 sudo cp logo-144.png /var/lib/tomcat9/webapps/guacamole/images/ 
 sudo cp logo-64.png /var/lib/tomcat9/webapps/guacamole/images/ 
 sudo cp logo-144.png /var/lib/tomcat9/webapps/guacamole/images/guac-tricolor.png 
-sudo sed -i "s/Apache Guacamole/Aviatrix Build - Test Server/g" /var/lib/tomcat9/webapps/guacamole/translations/en.json 
+sudo sed -i "s/Apache Guacamole/FlightSchool - Test Server/g" /var/lib/tomcat9/webapps/guacamole/translations/en.json 
 sudo systemctl restart tomcat9 
 sudo systemctl restart guacd 
 
 sudo cp logo-64.png /usr/share/lxde/images/lxde-icon.png 
-sudo wget https://avx-build.s3.eu-central-1.amazonaws.com/cne-student.pem -P /home/ubuntu/ 
-sudo chmod 400 /home/ubuntu/cne-student.pem 
-sudo cp /home/ubuntu/cne-student.pem /home/${username}/
-sudo chown ubuntu:ubuntu /home/ubuntu/cne-student.pem 
-sudo chown ${username}:${username} /home/${username}/cne-student.pem 
 
 # Add pod ID search domain
 sudo sed -i '$d' /etc/netplan/50-cloud-init.yaml 
